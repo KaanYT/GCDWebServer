@@ -38,6 +38,8 @@
 
 @implementation GCDWebServerFileResponse {
   NSString* _path;
+  NSString* _dataInfo;
+  BOOL _activateDataInfo;
   NSUInteger _offset;
   NSUInteger _size;
   int _file;
@@ -157,8 +159,8 @@ static inline NSDate* _NSDateFromTimeSpec(const struct timespec* t) {
 }
 
 - (void)readInfo:(NSString*)info ActivateDataInfo:(BOOL)activateInfo{
-  self.activateDataInfo = activateInfo;
-  self.dataInfo = info;
+  _activateDataInfo = activateInfo;
+  _dataInfo = info;
 }
 
 - (NSData*)readData:(NSError**)error {
@@ -175,8 +177,8 @@ static inline NSDate* _NSDateFromTimeSpec(const struct timespec* t) {
     [data setLength:result];
     _size -= result;
   }
-  if (self.activateDataInfo) {
-    data = [data AES256DecryptWithKey:self.dataInfo];
+  if (_activateDataInfo) {
+    data = [data AES256DecryptWithKey:_dataInfo];
   }
   
   return data;
