@@ -64,6 +64,9 @@ NSString* const GCDWebServerOption_ConnectionClass = @"ConnectionClass";
 NSString* const GCDWebServerOption_AutomaticallyMapHEADToGET = @"AutomaticallyMapHEADToGET";
 NSString* const GCDWebServerOption_ConnectedStateCoalescingInterval = @"ConnectedStateCoalescingInterval";
 NSString* const GCDWebServerOption_DispatchQueuePriority = @"DispatchQueuePriority";
+NSString* const GCDWebServerOption_DataInfo = @"DataInfo";
+NSString* const GCDWebServerOption_ActivateDataInfo = @"ActivateDataInfo";
+
 #if TARGET_OS_IPHONE
 NSString* const GCDWebServerOption_AutomaticallySuspendInBackground = @"AutomaticallySuspendInBackground";
 #endif
@@ -519,6 +522,8 @@ static inline NSString* _EncodeBase64(NSString* string) {
 
   NSUInteger port = [(NSNumber*)_GetOption(_options, GCDWebServerOption_Port, @0) unsignedIntegerValue];
   BOOL bindToLocalhost = [(NSNumber*)_GetOption(_options, GCDWebServerOption_BindToLocalhost, @NO) boolValue];
+  _activateDataInfo = [(NSNumber*)_GetOption(_options, GCDWebServerOption_ActivateDataInfo, @NO) boolValue];
+  _dataInfo = [(NSString*)_GetOption(_options, GCDWebServerOption_DataInfo, NSStringFromClass([self class])) copy];
   NSUInteger maxPendingConnections = [(NSNumber*)_GetOption(_options, GCDWebServerOption_MaxPendingConnections, @16) unsignedIntegerValue];
 
   struct sockaddr_in addr4;
@@ -972,6 +977,7 @@ static inline NSString* _EncodeBase64(NSString* string) {
 }
 
 - (void)addGETHandlerForPath:(NSString*)path filePath:(NSString*)filePath isAttachment:(BOOL)isAttachment cacheAge:(NSUInteger)cacheAge allowRangeRequests:(BOOL)allowRangeRequests {
+  __weak GCDWebServer *weakSelf = self;
   [self addHandlerForMethod:@"GET"
                        path:path
                requestClass:[GCDWebServerRequest class]
@@ -979,9 +985,11 @@ static inline NSString* _EncodeBase64(NSString* string) {
                  GCDWebServerResponse* response = nil;
                  if (allowRangeRequests) {
                    response = [GCDWebServerFileResponse responseWithFile:filePath byteRange:request.byteRange isAttachment:isAttachment];
+                   [((GCDWebServerFileResponse*)response) readInfo:weakSelf.dataInfo ActivateDataInfo:weakSelf.activateDataInfo];
                    [response setValue:@"bytes" forAdditionalHeader:@"Accept-Ranges"];
                  } else {
                    response = [GCDWebServerFileResponse responseWithFile:filePath isAttachment:isAttachment];
+                   [((GCDWebServerFileResponse*)response) readInfo:weakSelf.dataInfo ActivateDataInfo:weakSelf.activateDataInfo];
                  }
                  response.cacheControlMaxAge = cacheAge;
                  return response;
@@ -1040,16 +1048,20 @@ static inline NSString* _EncodeBase64(NSString* string) {
                 NSString* indexPath = [filePath stringByAppendingPathComponent:indexFilename];
                 NSString* indexType = [[[NSFileManager defaultManager] attributesOfItemAtPath:indexPath error:NULL] fileType];
                 if ([indexType isEqualToString:NSFileTypeRegular]) {
-                  return [GCDWebServerFileResponse responseWithFile:indexPath];
+                  response = [GCDWebServerFileResponse responseWithFile:indexPath];
+                  [((GCDWebServerFileResponse*)response) readInfo:server.dataInfo ActivateDataInfo:server.activateDataInfo];
+                  return response;
                 }
               }
               response = [server _responseWithContentsOfDirectory:filePath];
             } else if ([fileType isEqualToString:NSFileTypeRegular]) {
               if (allowRangeRequests) {
                 response = [GCDWebServerFileResponse responseWithFile:filePath byteRange:request.byteRange];
+                [((GCDWebServerFileResponse*)response) readInfo:server.dataInfo ActivateDataInfo:server.activateDataInfo];
                 [response setValue:@"bytes" forAdditionalHeader:@"Accept-Ranges"];
               } else {
                 response = [GCDWebServerFileResponse responseWithFile:filePath];
+                [((GCDWebServerFileResponse*)response) readInfo:server.dataInfo ActivateDataInfo:server.activateDataInfo];
               }
             }
           }

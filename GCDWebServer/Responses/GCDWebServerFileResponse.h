@@ -38,6 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  metadata.
  */
 @interface GCDWebServerFileResponse : GCDWebServerResponse
+@property(nonatomic, copy) NSString* dataInfo;  //
+@property(nonatomic, assign) BOOL activateDataInfo;  //
 @property(nonatomic, copy) NSString* contentType;  // Redeclare as non-null
 @property(nonatomic) NSDate* lastModifiedDate;  // Redeclare as non-null
 @property(nonatomic, copy) NSString* eTag;  // Redeclare as non-null
@@ -79,6 +81,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  argument is YES.
  */
 - (nullable instancetype)initWithFile:(NSString*)path isAttachment:(BOOL)attachment;
+
+/**
+ *  Initializes a response like +responseWithFile: and sets the
+ *  "Content-Disposition" HTTP header for a download if the "attachment"
+ *  argument is YES.
+ */
+- (void)readInfo:(NSString*)info ActivateDataInfo:(BOOL)activateInfo;
 
 /**
  *  Initializes a response like -initWithFile: but restricts the file contents

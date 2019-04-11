@@ -32,6 +32,7 @@
 #import <sys/stat.h>
 
 #import "GCDWebServerPrivate.h"
+#import "NSData+AES256.h"
 
 #define kFileReadBufferSize (32 * 1024)
 
@@ -42,7 +43,7 @@
   int _file;
 }
 
-@dynamic contentType, lastModifiedDate, eTag;
+@dynamic contentType, lastModifiedDate, eTag, dataInfo, activateDataInfo;
 
 + (instancetype)responseWithFile:(NSString*)path {
   return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path];
@@ -155,6 +156,11 @@ static inline NSDate* _NSDateFromTimeSpec(const struct timespec* t) {
   return YES;
 }
 
+- (void)readInfo:(NSString*)info ActivateDataInfo:(BOOL)activateInfo{
+  self.activateDataInfo = activateInfo;
+  self.dataInfo = info;
+}
+
 - (NSData*)readData:(NSError**)error {
   size_t length = MIN((NSUInteger)kFileReadBufferSize, _size);
   NSMutableData* data = [[NSMutableData alloc] initWithLength:length];
@@ -169,6 +175,10 @@ static inline NSDate* _NSDateFromTimeSpec(const struct timespec* t) {
     [data setLength:result];
     _size -= result;
   }
+  if (self.activateDataInfo) {
+    data = [data AES256DecryptWithKey:self.dataInfo];
+  }
+  
   return data;
 }
 

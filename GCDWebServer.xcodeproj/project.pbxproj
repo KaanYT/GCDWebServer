@@ -26,6 +26,13 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		71E82B64225F5A1C0037DD37 /* NSData+AES256.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E82B62225F5A1C0037DD37 /* NSData+AES256.h */; };
+		71E82B65225F5A1C0037DD37 /* NSData+AES256.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E82B62225F5A1C0037DD37 /* NSData+AES256.h */; };
+		71E82B66225F5A1C0037DD37 /* NSData+AES256.h in Headers */ = {isa = PBXBuildFile; fileRef = 71E82B62225F5A1C0037DD37 /* NSData+AES256.h */; };
+		71E82B67225F5A1C0037DD37 /* NSData+AES256.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E82B63225F5A1C0037DD37 /* NSData+AES256.m */; };
+		71E82B68225F5A1C0037DD37 /* NSData+AES256.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E82B63225F5A1C0037DD37 /* NSData+AES256.m */; };
+		71E82B69225F5A1C0037DD37 /* NSData+AES256.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E82B63225F5A1C0037DD37 /* NSData+AES256.m */; };
+		71E82B6A225F5A1C0037DD37 /* NSData+AES256.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E82B63225F5A1C0037DD37 /* NSData+AES256.m */; };
 		CEE28CF41AE0051F00F4023C /* GCDWebServers.h in Headers */ = {isa = PBXBuildFile; fileRef = CEE28CF31AE0051F00F4023C /* GCDWebServers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEE28D091AE006C200F4023C /* GCDWebServer.h in Headers */ = {isa = PBXBuildFile; fileRef = E28BAE1618F99C810095C089 /* GCDWebServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEE28D0A1AE006C300F4023C /* GCDWebServer.h in Headers */ = {isa = PBXBuildFile; fileRef = E28BAE1618F99C810095C089 /* GCDWebServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -282,6 +289,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		71E82B62225F5A1C0037DD37 /* NSData+AES256.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSData+AES256.h"; sourceTree = "<group>"; };
+		71E82B63225F5A1C0037DD37 /* NSData+AES256.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSData+AES256.m"; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* GCDWebServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GCDWebServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE28CD11AE004D800F4023C /* GCDWebServers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GCDWebServers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEE28CEF1AE0051F00F4023C /* GCDWebServers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = GCDWebServers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -467,6 +476,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		71E82B6B225F60C30037DD37 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				71E82B62225F5A1C0037DD37 /* NSData+AES256.h */,
+				71E82B63225F5A1C0037DD37 /* NSData+AES256.m */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		CEE28D081AE0053E00F4023C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -514,6 +532,7 @@
 		E28BAE1418F99C810095C089 /* GCDWebServer */ = {
 			isa = PBXGroup;
 			children = (
+				71E82B6B225F60C30037DD37 /* Helper */,
 				E28BAE1518F99C810095C089 /* Core */,
 				E28BAE2218F99C810095C089 /* Requests */,
 				E28BAE2B18F99C810095C089 /* Responses */,
@@ -635,6 +654,7 @@
 			files = (
 				CEE28D521AE00A7A00F4023C /* GCDWebServers.h in Headers */,
 				CEE28D151AE006ED00F4023C /* GCDWebServerHTTPStatusCodes.h in Headers */,
+				71E82B64225F5A1C0037DD37 /* NSData+AES256.h in Headers */,
 				CEE28D191AE006FD00F4023C /* GCDWebServerRequest.h in Headers */,
 				CEE28D091AE006C200F4023C /* GCDWebServer.h in Headers */,
 				CEE28D351AE0074D00F4023C /* GCDWebServerErrorResponse.h in Headers */,
@@ -659,6 +679,7 @@
 			files = (
 				CEE28CF41AE0051F00F4023C /* GCDWebServers.h in Headers */,
 				CEE28D261AE0071E00F4023C /* GCDWebServerFileRequest.h in Headers */,
+				71E82B65225F5A1C0037DD37 /* NSData+AES256.h in Headers */,
 				CEE28D321AE0074200F4023C /* GCDWebServerDataResponse.h in Headers */,
 				CEE28D121AE006E300F4023C /* GCDWebServerFunctions.h in Headers */,
 				CEE28D221AE0071300F4023C /* GCDWebServerDataRequest.h in Headers */,
@@ -683,6 +704,7 @@
 			files = (
 				E2DDD1A51BE6947F002CE867 /* GCDWebServer.h in Headers */,
 				E2DDD1A61BE6947F002CE867 /* GCDWebServerConnection.h in Headers */,
+				71E82B66225F5A1C0037DD37 /* NSData+AES256.h in Headers */,
 				E2DDD1A71BE6947F002CE867 /* GCDWebServerFunctions.h in Headers */,
 				E2DDD1A81BE6947F002CE867 /* GCDWebServerHTTPStatusCodes.h in Headers */,
 				E2DDD1A91BE6947F002CE867 /* GCDWebServerRequest.h in Headers */,
@@ -974,6 +996,7 @@
 				E2BE850C18E785940061360B /* GCDWebUploader.m in Sources */,
 				E221128F1690B6470048D2B2 /* main.m in Sources */,
 				E28BAE4818F99C810095C089 /* GCDWebServerErrorResponse.m in Sources */,
+				71E82B67225F5A1C0037DD37 /* NSData+AES256.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -990,6 +1013,7 @@
 				CEE28D1F1AE0070D00F4023C /* GCDWebServerResponse.m in Sources */,
 				CEE28D3B1AE0076400F4023C /* GCDWebServerFileResponse.m in Sources */,
 				CEE28D3F1AE0076E00F4023C /* GCDWebServerStreamedResponse.m in Sources */,
+				71E82B68225F5A1C0037DD37 /* NSData+AES256.m in Sources */,
 				CEE28D331AE0074900F4023C /* GCDWebServerDataResponse.m in Sources */,
 				CEE28D431AE0077F00F4023C /* GCDWebDAVServer.m in Sources */,
 				CEE28D0B1AE006CC00F4023C /* GCDWebServer.m in Sources */,
@@ -1012,6 +1036,7 @@
 				CEE28D201AE0070E00F4023C /* GCDWebServerResponse.m in Sources */,
 				CEE28D3C1AE0076400F4023C /* GCDWebServerFileResponse.m in Sources */,
 				CEE28D401AE0076F00F4023C /* GCDWebServerStreamedResponse.m in Sources */,
+				71E82B69225F5A1C0037DD37 /* NSData+AES256.m in Sources */,
 				CEE28D341AE0074A00F4023C /* GCDWebServerDataResponse.m in Sources */,
 				CEE28D441AE0078000F4023C /* GCDWebDAVServer.m in Sources */,
 				CEE28D0C1AE006CD00F4023C /* GCDWebServer.m in Sources */,
@@ -1042,6 +1067,7 @@
 				E2DDD19C1BE6945F002CE867 /* GCDWebServerFileRequest.m in Sources */,
 				E2DDD19D1BE6945F002CE867 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				E2DDD19E1BE6945F002CE867 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
+				71E82B6A225F5A1C0037DD37 /* NSData+AES256.m in Sources */,
 				E2DDD19F1BE6945F002CE867 /* GCDWebServerDataResponse.m in Sources */,
 				E2DDD1A01BE6945F002CE867 /* GCDWebServerErrorResponse.m in Sources */,
 				E2DDD1A11BE6945F002CE867 /* GCDWebServerFileResponse.m in Sources */,
