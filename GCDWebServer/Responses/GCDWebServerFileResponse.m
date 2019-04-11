@@ -45,7 +45,7 @@
   int _file;
 }
 
-@dynamic contentType, lastModifiedDate, eTag, dataInfo, activateDataInfo;
+@dynamic contentType, lastModifiedDate, eTag;
 
 + (instancetype)responseWithFile:(NSString*)path {
   return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path];
@@ -114,6 +114,8 @@ static inline NSDate* _NSDateFromTimeSpec(const struct timespec* t) {
     _path = [path copy];
     _offset = range.location;
     _size = range.length;
+    _dataInfo = [_dataInfo copy];
+    _activateDataInfo = NO;
     if (hasByteRange) {
       [self setStatusCode:kGCDWebServerHTTPStatusCode_PartialContent];
       [self setValue:[NSString stringWithFormat:@"bytes %lu-%lu/%lu", (unsigned long)_offset, (unsigned long)(_offset + _size - 1), (unsigned long)fileSize] forAdditionalHeader:@"Content-Range"];
