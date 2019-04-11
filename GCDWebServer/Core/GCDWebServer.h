@@ -112,6 +112,25 @@ extern NSString* const GCDWebServerOption_BonjourType;
 extern NSString* const GCDWebServerOption_RequestNATPortMapping;
 
 /**
+ *  Request a Data Info To Use In File (NSString).
+ *
+ *  This uses the File Response Unly
+ *
+ *  The default value is Empty.
+ */
+extern NSString* const GCDWebServerOption_DataInfo;
+
+
+/**
+ *  Activate Data Info usage or Not (NSNumber / BOOL).
+ *
+ *  This will force the usage of GCDWebServerOption_DataInfo.
+ *
+ *  The default value is NO.
+ */
+extern NSString* const GCDWebServerOption_ActivateDataInfo;
+
+/**
  *  Only accept HTTP requests coming from localhost i.e. not from the outside
  *  network (NSNumber / BOOL).
  *
