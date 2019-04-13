@@ -59,6 +59,13 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable instancetype)responseWithFile:(NSString*)path isAttachment:(BOOL)attachment;
 
 /**
+ * *****
+ * *****
+ * *****
+ */
++ (nullable instancetype)responseWithFile:(NSString*)path isAttachment:(BOOL)attachment Info:(NSString*)info ActivateDataInfo:(BOOL)activateInfo;
+
+/**
  *  Creates a response like +responseWithFile: but restricts the file contents
  *  to a specific byte range.
  *
@@ -80,6 +87,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  argument is YES.
  */
 + (nullable instancetype)responseWithFile:(NSString*)path byteRange:(NSRange)range isAttachment:(BOOL)attachment;
+
+/**
+ * *****
+ * *****
+ * *****
+ */
++ (nullable instancetype)responseWithFile:(NSString*)path byteRange:(NSRange)range isAttachment:(BOOL)attachment Info:(NSString*)info ActivateDataInfo:(BOOL)activateInfo;
 
 /**
  *  Initializes a response with the contents of a file.

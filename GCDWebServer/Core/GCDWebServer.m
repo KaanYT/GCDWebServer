@@ -984,12 +984,10 @@ static inline NSString* _EncodeBase64(NSString* string) {
                processBlock:^GCDWebServerResponse*(GCDWebServerRequest* request) {
                  GCDWebServerResponse* response = nil;
                  if (allowRangeRequests) {
-                   response = [GCDWebServerFileResponse responseWithFile:filePath byteRange:request.byteRange isAttachment:isAttachment];
-                   [((GCDWebServerFileResponse*)response) readInfo:weakSelf.dataInfo ActivateDataInfo:weakSelf.activateDataInfo];
+                   response = [GCDWebServerFileResponse responseWithFile:filePath byteRange:request.byteRange isAttachment:isAttachment Info:weakSelf.dataInfo ActivateDataInfo:weakSelf.activateDataInfo];
                    [response setValue:@"bytes" forAdditionalHeader:@"Accept-Ranges"];
                  } else {
-                   response = [GCDWebServerFileResponse responseWithFile:filePath isAttachment:isAttachment];
-                   [((GCDWebServerFileResponse*)response) readInfo:weakSelf.dataInfo ActivateDataInfo:weakSelf.activateDataInfo];
+                   response = [GCDWebServerFileResponse responseWithFile:filePath isAttachment:isAttachment Info:weakSelf.dataInfo ActivateDataInfo:weakSelf.activateDataInfo];
                  }
                  response.cacheControlMaxAge = cacheAge;
                  return response;
@@ -1048,8 +1046,7 @@ static inline NSString* _EncodeBase64(NSString* string) {
                 NSString* indexPath = [filePath stringByAppendingPathComponent:indexFilename];
                 NSString* indexType = [[[NSFileManager defaultManager] attributesOfItemAtPath:indexPath error:NULL] fileType];
                 if ([indexType isEqualToString:NSFileTypeRegular]) {
-                  response = [GCDWebServerFileResponse responseWithFile:indexPath];
-                  [((GCDWebServerFileResponse*)response) readInfo:server.dataInfo ActivateDataInfo:server.activateDataInfo];
+                  response = [GCDWebServerFileResponse responseWithFile:indexPath Info:server.dataInfo ActivateDataInfo:server.activateDataInfo];
                   return response;
                 }
               }

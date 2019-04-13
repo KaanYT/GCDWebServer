@@ -71,6 +71,14 @@
   return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path byteRange:range isAttachment:attachment mimeTypeOverrides:nil info:nil activateDataInfo:NO];
 }
 
++ (nullable instancetype)responseWithFile:(NSString*)path isAttachment:(BOOL)attachment Info:(NSString*)info ActivateDataInfo:(BOOL)activateInfo{
+  return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path byteRange:NSMakeRange(NSUIntegerMax, 0) isAttachment:attachment mimeTypeOverrides:nil info:info activateDataInfo:activateInfo];
+}
+
++ (nullable instancetype)responseWithFile:(NSString*)path byteRange:(NSRange)range isAttachment:(BOOL)attachment Info:(NSString*)info ActivateDataInfo:(BOOL)activateInfo{
+  return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path byteRange:range isAttachment:attachment mimeTypeOverrides:nil info:info activateDataInfo:activateInfo];
+}
+
 - (instancetype)initWithFile:(NSString*)path {
   return [self initWithFile:path byteRange:NSMakeRange(NSUIntegerMax, 0) isAttachment:NO mimeTypeOverrides:nil info:nil activateDataInfo:NO];
 }
