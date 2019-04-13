@@ -201,6 +201,7 @@ NS_ASSUME_NONNULL_END
           [self writeBodyWithCompletionBlock:^(BOOL successInner) {
             [self->_response performClose];  // TODO: There's nothing we can do on failure as headers have already been sent
           }];
+          
         }
       } else if (hasBody) {
         [self->_response performClose];

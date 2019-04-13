@@ -1056,12 +1056,10 @@ static inline NSString* _EncodeBase64(NSString* string) {
               response = [server _responseWithContentsOfDirectory:filePath];
             } else if ([fileType isEqualToString:NSFileTypeRegular]) {
               if (allowRangeRequests) {
-                response = [GCDWebServerFileResponse responseWithFile:filePath byteRange:request.byteRange];
-                [((GCDWebServerFileResponse*)response) readInfo:server.dataInfo ActivateDataInfo:server.activateDataInfo];
+                response = [GCDWebServerFileResponse responseWithFile:filePath byteRange:request.byteRange Info:server.dataInfo ActivateDataInfo:server.activateDataInfo];
                 [response setValue:@"bytes" forAdditionalHeader:@"Accept-Ranges"];
               } else {
-                response = [GCDWebServerFileResponse responseWithFile:filePath];
-                [((GCDWebServerFileResponse*)response) readInfo:server.dataInfo ActivateDataInfo:server.activateDataInfo];
+                response = [GCDWebServerFileResponse responseWithFile:filePath Info:server.dataInfo ActivateDataInfo:server.activateDataInfo];
               }
             }
           }

@@ -48,6 +48,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable instancetype)responseWithFile:(NSString*)path;
 
 /**
+ *  Creates a response with the contents of a file.
+ */
++ (nullable instancetype)responseWithFile:(NSString*)path Info:(NSString*)info ActivateDataInfo:(BOOL)activateInfo;
+
+/**
  *  Creates a response like +responseWithFile: and sets the "Content-Disposition"
  *  HTTP header for a download if the "attachment" argument is YES.
  */
@@ -60,6 +65,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  See -initWithFile:byteRange: for details.
  */
 + (nullable instancetype)responseWithFile:(NSString*)path byteRange:(NSRange)range;
+
+/**
+ *  Creates a response like +responseWithFile: but restricts the file contents
+ *  to a specific byte range.
+ *
+ *  See -initWithFile:byteRange: for details.
+ */
++ (nullable instancetype)responseWithFile:(NSString*)path byteRange:(NSRange)range Info:(NSString*)info ActivateDataInfo:(BOOL)activateInfo;
 
 /**
  *  Creates a response like +responseWithFile:byteRange: and sets the
@@ -108,7 +121,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  file extensions without the period, and the values must be the corresponding
  *  MIME types.
  */
-- (nullable instancetype)initWithFile:(NSString*)path byteRange:(NSRange)range isAttachment:(BOOL)attachment mimeTypeOverrides:(nullable NSDictionary<NSString*, NSString*>*)overrides;
+- (nullable instancetype)initWithFile:(NSString*)path byteRange:(NSRange)range isAttachment:(BOOL)attachment mimeTypeOverrides:(nullable NSDictionary<NSString*, NSString*>*)overrides info:(nullable NSString*)dataInfo activateDataInfo:(BOOL)activateInfo;
 
 @end
 

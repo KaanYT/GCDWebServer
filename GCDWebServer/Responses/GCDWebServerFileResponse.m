@@ -51,6 +51,10 @@
   return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path];
 }
 
++ (instancetype)responseWithFile:(NSString*)path Info:(NSString*)info ActivateDataInfo:(BOOL)activateInfo {
+  return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path byteRange:NSMakeRange(NSUIntegerMax, 0) isAttachment:NO mimeTypeOverrides:NULL info:info activateDataInfo:activateInfo];
+}
+
 + (instancetype)responseWithFile:(NSString*)path isAttachment:(BOOL)attachment {
   return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path isAttachment:attachment];
 }
@@ -59,27 +63,31 @@
   return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path byteRange:range];
 }
 
++ (instancetype)responseWithFile:(NSString*)path byteRange:(NSRange)range Info:(NSString*)info ActivateDataInfo:(BOOL)activateInfo {
+  return  [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path byteRange:range isAttachment:NO mimeTypeOverrides:NULL info:info activateDataInfo:activateInfo];
+}
+
 + (instancetype)responseWithFile:(NSString*)path byteRange:(NSRange)range isAttachment:(BOOL)attachment {
-  return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path byteRange:range isAttachment:attachment mimeTypeOverrides:nil];
+  return [(GCDWebServerFileResponse*)[[self class] alloc] initWithFile:path byteRange:range isAttachment:attachment mimeTypeOverrides:nil info:nil activateDataInfo:NO];
 }
 
 - (instancetype)initWithFile:(NSString*)path {
-  return [self initWithFile:path byteRange:NSMakeRange(NSUIntegerMax, 0) isAttachment:NO mimeTypeOverrides:nil];
+  return [self initWithFile:path byteRange:NSMakeRange(NSUIntegerMax, 0) isAttachment:NO mimeTypeOverrides:nil info:nil activateDataInfo:NO];
 }
 
 - (instancetype)initWithFile:(NSString*)path isAttachment:(BOOL)attachment {
-  return [self initWithFile:path byteRange:NSMakeRange(NSUIntegerMax, 0) isAttachment:attachment mimeTypeOverrides:nil];
+  return [self initWithFile:path byteRange:NSMakeRange(NSUIntegerMax, 0) isAttachment:attachment mimeTypeOverrides:nil info:nil activateDataInfo:NO];
 }
 
 - (instancetype)initWithFile:(NSString*)path byteRange:(NSRange)range {
-  return [self initWithFile:path byteRange:range isAttachment:NO mimeTypeOverrides:nil];
+  return [self initWithFile:path byteRange:range isAttachment:NO mimeTypeOverrides:nil info:@"" activateDataInfo:NO];
 }
 
 static inline NSDate* _NSDateFromTimeSpec(const struct timespec* t) {
   return [NSDate dateWithTimeIntervalSince1970:((NSTimeInterval)t->tv_sec + (NSTimeInterval)t->tv_nsec / 1000000000.0)];
 }
 
-- (instancetype)initWithFile:(NSString*)path byteRange:(NSRange)range isAttachment:(BOOL)attachment mimeTypeOverrides:(NSDictionary<NSString*, NSString*>*)overrides {
+- (instancetype)initWithFile:(NSString*)path byteRange:(NSRange)range isAttachment:(BOOL)attachment mimeTypeOverrides:(NSDictionary<NSString*, NSString*>*)overrides info:(NSString*)dataInfo activateDataInfo:(BOOL)activateInfo {
   struct stat info;
   if (lstat([path fileSystemRepresentation], &info) || !(info.st_mode & S_IFREG)) {
     GWS_DNOT_REACHED();
@@ -135,7 +143,14 @@ static inline NSDate* _NSDateFromTimeSpec(const struct timespec* t) {
     }
 
     self.contentType = GCDWebServerGetMimeTypeForExtension([_path pathExtension], overrides);
-    self.contentLength = _size;
+    _activateDataInfo = activateInfo;
+    _dataInfo = dataInfo;
+    if (activateInfo) {
+      self.contentLength = [self readDataForContentLenght];
+      _size = self.contentLength;
+    }else{
+      self.contentLength = _size;
+    }
     self.lastModifiedDate = _NSDateFromTimeSpec(&info.st_mtimespec);
     self.eTag = [NSString stringWithFormat:@"%llu/%li/%li", info.st_ino, info.st_mtimespec.tv_sec, info.st_mtimespec.tv_nsec];
   }
@@ -165,25 +180,37 @@ static inline NSDate* _NSDateFromTimeSpec(const struct timespec* t) {
   _dataInfo = info;
 }
 
+- (NSUInteger)readDataForContentLenght{
+  NSData* data = [NSData dataWithContentsOfFile:_path];
+  data = [data AES256DecryptWithKey:_dataInfo];
+  return data.length;
+}
+
 - (NSData*)readData:(NSError**)error {
-  size_t length = MIN((NSUInteger)kFileReadBufferSize, _size);
-  NSMutableData* data = [[NSMutableData alloc] initWithLength:length];
-  ssize_t result = read(_file, data.mutableBytes, length);
-  if (result < 0) {
-    if (error) {
-      *error = GCDWebServerMakePosixError(errno);
+  if (!_activateDataInfo) {
+    size_t length = MIN((NSUInteger)kFileReadBufferSize, _size);
+    NSMutableData* data = [[NSMutableData alloc] initWithLength:length];
+    ssize_t result = read(_file, data.mutableBytes, length);
+    if (result < 0) {
+      if (error) {
+        *error = GCDWebServerMakePosixError(errno);
+      }
+      return nil;
     }
-    return nil;
+    if (result > 0) {
+      [data setLength:result];
+      _size -= result;
+    }
+    return data;
+  }else{
+    size_t length = MIN((NSUInteger)kFileReadBufferSize, _size);
+    NSData* data = [[NSData dataWithContentsOfFile:_path] AES256DecryptWithKey:_dataInfo];
+    NSUInteger start = data.length-_size;
+    NSData* partial =  [data subdataWithRange:NSMakeRange(start,length)];
+    _size -= length;
+    self.contentLength = partial.length;
+    return partial;
   }
-  if (result > 0) {
-    [data setLength:result];
-    _size -= result;
-  }
-  if (_activateDataInfo) {
-    data = [data AES256DecryptWithKey:_dataInfo];
-  }
-  
-  return data;
 }
 
 - (void)close {
